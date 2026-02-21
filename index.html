@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Rapport – HC-SR501 PIR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0c0c0f;
+            --panel: #111115;
+            --panel-hover: #16161b;
+            --text: #dddde3;
+            --muted: #888896;
+            --faint: #444455;
+            --line: #1e1e27;
+            --accent: #7aa2f7;
+            --accent-dim: rgba(122, 162, 247, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-weight: 300;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(12, 12, 15, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        nav .wrap {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 10px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px 4px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 12px;
+            font-family: 'IBM Plex Mono', monospace;
+            padding: 5px 10px;
+            border-radius: 4px;
+            letter-spacing: 0.3px;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        main {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 48px 20px 80px;
+        }
+
+        header {
+            margin-bottom: 48px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .eyebrow {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        section {
+            padding: 28px 28px 24px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            margin-bottom: 12px;
+            scroll-margin-top: 80px;
+            transition: border-color 0.2s;
+        }
+
+        section:hover {
+            border-color: var(--faint);
+        }
+
+        h2 {
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'IBM Plex Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--accent);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+
+        p {
+            color: var(--muted);
+            margin-bottom: 14px;
+            font-weight: 300;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        .block-title {
+            display: block;
+            font-weight: 500;
+            color: var(--text);
+            margin: 20px 0 6px;
+            font-size: 14px;
+        }
+
+        ul {
+            list-style: none;
+            margin: 8px 0 16px 0;
+            padding: 0;
+            border-left: 2px solid var(--line);
+            padding-left: 16px;
+        }
+
+        li {
+            color: var(--muted);
+            padding: 3px 0;
+            font-size: 14px;
+        }
+
+        li::before {
+            content: '—';
+            color: var(--faint);
+            margin-right: 8px;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .sources {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+        }
+
+        .sources-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--faint);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .sources a {
+            display: block;
+            color: var(--accent);
+            font-size: 12px;
+            font-family: 'IBM Plex Mono', monospace;
+            text-decoration: none;
+            padding: 3px 0;
+            opacity: 0.7;
+            word-break: break-all;
+            transition: opacity 0.15s;
+        }
+
+        .sources a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .callout {
+            background: var(--accent-dim);
+            border-left: 3px solid var(--accent);
+            padding: 14px 16px;
+            border-radius: 0 4px 4px 0;
+            margin: 16px 0;
+            font-style: italic;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        footer {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 24px 20px 40px;
+            border-top: 1px solid var(--line);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--faint);
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="wrap">
+            <a href="#usage">Usage proposé</a>
+            <a href="#description">Description</a>
+            <a href="#schema">Schématisation</a>
+            <a href="#experiences">Expérimentations</a>
+            <a href="#avis">Avis</a>
+            <a href="#longevite">Longévité</a>
+            <a href="#stabilite">Stabilité</a>
+            <a href="#efficacite">Efficacité</a>
+            <a href="#maintenabilite">Maintenabilité</a>
+            <a href="#avantages">Avantages et inconvénients</a>
+            <a href="#comparaison">Comparaison</a>
+            <a href="#conclusion">Conclusion</a>
+        </div>
+    </nav>
+
+    <main>
+        <header>
+            <p class="eyebrow">Rapport de laboratoire</p>
+            <h1>Rapport – Capteur de mouvement HC-SR501 PIR</h1>
+            <p class="subtitle">Page HTML/CSS simple (fond noir/gris) avec navigation par sections</p>
+        </header>
+
+        <section id="usage">
+            <h2>Usage proposé</h2>
+            <p>Pour plusieurs scénarios dans notre monde actuel, la sécurité est l'un des enjeux les plus importants.
+                Malgré les milliers d'innovations technologiques, le capteur de mouvement demeure l'une des inventions
+                les plus utilisées aujourd'hui. En effet, ce type de dispositif est présent dans des contextes
+                commerciaux (portes automatiques, éclairage, etc.) ainsi que dans des contextes liés à la sécurité
+                (caméras, systèmes d'alarme, automobiles, etc)</p>
+            <p>C'est pour ces raisons que j'ai choisi d'utiliser le capteur de mouvement HC-SR501 PIR.</p>
+        </section>
+
+        <section id="description">
+            <h2>Description de l'objet expérimenté</h2>
+            <p>Ce détecteur de mouvement me permettra de concevoir un système de détection de mouvement autonome à
+                l'aide d'un microcontrôleur (Arduino Uno), destiné à surveiller le passage de personnes dans une zone
+                précise. En d'autres mots lorsqu'un mouvement est détecté par le capteur, l'information est traitée et
+                peut être affichée en temps réel sur le système local de Arduino tout en déclenchant une action un
+                signal lumineux.</p>
+            <p>Dans ce laboratoire, nous expérimenterons avec le capteur de mouvement HC-SR501 PIR, un composant
+                électronique utilisé pour détecter la présence ou le déplacement d'une personne (mouvement). Le capteur
+                est relié à une carte Arduino Uno, un microcontrôleur à faible coût conçu pour le prototypage et
+                l'apprentissage de l'électronique.</p>
+            <p>L'Arduino Uno permet de lire les données du capteur et de déclencher des actions simples, comme
+                l'allumage d'une lumière (DEL) ou l'affichage d'une information. Pour notre part, le montage utilise
+                aussi une breadboard, des fils de connexion et une résistance, ce qui permet de concevoir un système
+                fonctionnel sans infrastructure complexe ni coûteuse.</p>
+            <p>Ce projet vise à démontrer comment un matériel léger et accessible peut être utilisé pour créer un
+                système de détection de mouvement fiable, applicable à des contextes simples comme la surveillance d'un
+                accès ou l'activation automatique d'un dispositif.</p>
+            <p>Le développement et la programmation du système sont réalisés à l'aide de l'environnement Arduino IDE, un
+                logiciel open-source fourni par Arduino.</p>
+
+            <div class="sources">
+                <span class="sources-label">Sources</span>
+                <a href="https://www.canadarobotix.com/products/2327?srsltid=AfmBOopA1mBz-4R_3OSxXLPiEPKIAi59z1G0KQ_VDicp_XZ6TitXbl8G"
+                    target="_blank">canadarobotix.com — Capteur HC-SR501</a>
+                <a href="https://www.arduino.cc/en/software/" target="_blank">arduino.cc — Arduino IDE</a>
+            </div>
+        </section>
+
+        <section id="schema">
+            <h2>Schématisation matérielle</h2>
+            <p style="font-style: italic; color: var(--faint);">(Schéma à insérer)</p>
+            <img src="media/img/shema.png" alt="Schéma de câblage du capteur HC-SR501 PIR avec Arduino Uno"
+                style="max-width: 100%; border: 1px solid var(--line); border-radius: 4px;">
+            <img src="media/img/montage.png" alt="Photo du montage du capteur HC-SR501 PIR avec Arduino Uno"
+                style="max-width: 100%; border: 1px solid var(--line); border-radius: 4px; margin-top: 12px;">
+        </section>
+
+        <section id="experiences">
+            <h2>Expérimentations</h2>
+            <p>Les expérimentations visent à évaluer si le capteur de mouvement HC-SR501 PIR offre une détection fiable
+                pour une utilisation simple de surveillance (détection d'une présence et déclenchement d'un signal
+                lumineux).</p>
+
+            <span class="block-title">1. Détection du mouvement</span>
+            <p>Objectif : Vérifier que le capteur détecte correctement un mouvement et déclenche l'action prévue
+                (lumière bleu DEL).<br>Matériel requis :</p>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>Capteur HC-SR501 PIR</li>
+                <li>Breadboard</li>
+                <li>DEL + résistance (≈ 220 Ω)</li>
+                <li>Fils de connexion (jumpers)</li>
+                <li>Câble USB + ordinateur (Arduino IDE / Serial Monitor)</li>
+            </ul>
+            <video controls
+                style="max-width: 100%; border: 1px solid var(--line); border-radius: 4px; margin-top: 12px;">
+                <source src="media/video/test.MOV" type="video/mov">
+                Your browser does not support the video tag.
+            </video>
+            <video controls
+                style="max-width: 100%; border: 1px solid var(--line); border-radius: 4px; margin-top: 12px;">
+                <source src="media/video/test2.mov" type="video/mov">
+                Your browser does not support the video tag.
+            </video>
+            <div class="callout">Résultat : La DEL s'allume et le message de détection apparaît sur le système Arduino
+                (installer sur ton ordinateur) à chaque mouvement devant le capteur.</div>
+
+            <span class="block-title">2. Fréquence de redétections (temps de reset)</span>
+            <p>Objectif : Mesurer le temps nécessaire avant que le capteur puisse détecter un nouveau mouvement après
+                une détection (fréquence à laquelle la DEL peut s'éteindre puis se rallumer).<br>Matériel requis :</p>
+            <ul>
+                <li>Même matériel que l'expérimentation 1</li>
+                <li>Chronomètre (téléphone)</li>
+            </ul>
+            <div class="callout">Résultat : Le capteur présente un délai entre deux détections, lié au temps de sortie
+                HIGH (durée d'activation) et au temps de réarmement. Ce délai est d'une moyenne de 3 secondes.</div>
+
+            <span class="block-title">3. Angle de détection</span>
+            <p>Objectif : Déterminer l'angle maximal dans lequel un mouvement peut être détecté de manière fiable par le
+                capteur.<br>Matériel requis :</p>
+            <ul>
+                <li>Même matériel que l'expérimentation 1</li>
+            </ul>
+            <div class="callout">Résultat : Le capteur détecte les mouvements dans un cône de détection précis, dont
+                l'angle peut être estimé à peu près autour de 120°. Effectivement sur la vidéo on peut voir que ma main,
+                situé un peu derrière le capteur, n'allume pas la petite lumière bleue.</div>
+        </section>
+
+        <section id="avis">
+            <h2>Avis</h2>
+            <p>Justification du potentiel de la techno (partie importante)</p>
+
+            <span class="block-title">Est-ce que les expérimentations ont été concluantes ?</span>
+            <p>Oui, à l'encontre de mes doutes, le capteur a démontré une excellente capacité à détecter un mouvement
+                dans une zone définie, à déclencher une lumière (DEL) et à fonctionner de manière stable. Les tests de
+                détection, de redétections et d'angle de détection montrent que cette technologie répond adéquatement
+                aux objectifs visés pour un système de détection plutôt simple.</p>
+
+            <span class="block-title">Dans quel cas la techno est-elle pertinente à utiliser ? Pourquoi ?</span>
+            <p>Cette technologie est particulièrement pertinente dans des contextes où le but principal est de détecter
+                une présence ou un passage, sans nécessairement devoir faire une authentification (code, etc). Elle est
+                bien adaptée pour des cas tel que la surveillance d'un petit environnement, l'activation automatique
+                d'un éclairage (lumière, veilleuse), des systèmes d'alarme de base ou des projets pédagogiques. E effet,
+                son faible coût, sa simplicité et sa faible consommation énergétique en font un outil efficace lorsque
+                les contraintes budgétaires ou techniques sont importantes.</p>
+
+            <span class="block-title">Dans quel cas n'est-elle pas pertinente à être utiliser ? Pourquoi ?</span>
+            <p>Pour des situations nécessitant une détection précise et continue, comme l'identification d'individus, la
+                mesure de vitesse ou la reconnaissance vocale, cette technologique n'est pas du tout adapté. La
+                technologie fonctionne selon une logique binaire (mouvement détecté ou non) et ne permet pas de
+                différencier les personnes, d'analyser finement leur comportement, etc. De plus, sa performance peut
+                être affectée par la température ambiante. Par exemple, ce n'est pas l'idéal dans les endroits qui
+                bougent trop, parce qu'il bug dès qu'il sent une source de chaleur comme un chauffage ou un animal
+                domestique.</p>
+
+            <div class="sources">
+                <span class="sources-label">Source</span>
+                <a href="https://docs.sunfounder.com/projects/umsk/fr/latest/01_components_basic/12-component_pir_motion.html"
+                    target="_blank">sunfounder.com — Composant PIR Motion</a>
+            </div>
+
+            <span class="block-title">Peut-elle s'intégrer avec d'autres techno afin de pallier ses faiblesses ?</span>
+            <p>Le potentiel de cette technologie augmente considérablement lorsqu'elle est intégrée à d'autres systèmes.
+                Par exemple, le capteur PIR peut servir de déclencheur à une caméra associée à un algorithme de
+                reconnaissance de formes (comme OpenCV). Le capteur peut maintenant détecter un truc louche, sonner
+                l'alerte, ouvrir la caméra et alors vérifier s'il s'agit bien d'un humain et non d'un chat ou un rideau
+                qui bouge.</p>
+
+            <div class="sources">
+                <span class="sources-label">Source</span>
+                <a href="https://opencv.org/" target="_blank">opencv.org — OpenCV</a>
+            </div>
+        </section>
+
+        <section id="longevite">
+            <h2>Longévité</h2>
+            <p>Franchement, le HC-SR501, c'est un module ultra fiable pour de la détection de mouvement sur le long
+                terme. Il n'a aucune pièce mécanique mobile, donc il n'y a pratiquement rien qui s'use par frottement ou
+                qui risque de casser juste avec le temps.</p>
+            <p>Il est capable d'aller à une température allant d'environ -15/ 20 °C jusqu'à +70/+80 °C selon les fiches
+                techniques et vendeurs (voir sources), ce qui couvre largement la plupart des montages extérieurs. Sa
+                consommation au repos est très faible : on parle d'un courant moyen de repos inférieur à 55 µA pour le
+                module, ce qui permet de l'alimenter avec une batterie pendant longtemps.</p>
+            <p>Si tu le mets dans un boîtier ou sous un abri qui le protège un peu du soleil, de la pluie et de la
+                condensation, c'est ce genre d'installation que tu installes une fois et que tu peux ensuite le laisser
+                tourner des années sans quasiment jamais y revenir.</p>
+
+            <div class="sources">
+                <span class="sources-label">Sources</span>
+                <a href="https://mhtronic.com/produit/capteur-de-mouvement-hc-sr501/" target="_blank">mhtronic.com —
+                    Capteur de mouvement HC-SR501</a>
+                <a href="https://abrid.ma/capteurs-et-modules-c-1/capteur-de-mouvement-pir-hc-sr501-%E2%80%93-detection-infrarouge-fiable-p-50"
+                    target="_blank">abrid.ma — HC-SR501 détection infrarouge fiable</a>
+                <a href="https://electronilab.co/wp-content/uploads/2013/12/HC-SR501.pdf"
+                    target="_blank">electronilab.co — Datasheet HC-SR501 (PDF)</a>
+                <a href="https://riton-duino.blogspot.com/2018/08/le-hc-sr501-en-37v.html"
+                    target="_blank">riton-duino.blogspot.com — HC-SR501 en 3.7V</a>
+            </div>
+        </section>
+
+        <section id="stabilite">
+            <h2>Stabilité</h2>
+            <p>Pour être franc, il excelle dans les environnements variables, supportant des températures extrêmes de
+                -20°C à +80°C sans perte de performance. Même après plusieurs cycles thermiques, typiques des hivers
+                québécois, il est toujours à son meilleur. Par exemple, exposé à des variations d'humidité (dans un
+                boîtier protégé), il ne manifeste aucune instabilité, contrairement à des modules plus complexes qui
+                dégrade avec le temps. (exemple!)</p>
+        </section>
+
+        <section id="efficacite">
+            <h2>Efficacité</h2>
+            <p>À seulement 2-3$ pièce, il offre une couverture optimale d'environ 7 mètres et 110° d'angle, déclenchant
+                instantanément tes setups d'automatisations (pour lumières, alarmes ou matériel DJ). Sa consommation
+                d'énergie inférieure à 50 µA permet une autonomie exceptionnelle sur batterie (des mois sur une pile
+                AA), surpassant largement les capteurs "smart" Bluetooth ou WiFi qui vident les accus en semaines.</p>
+            <p>Toutefois, étant basé sur la chaleur (PIR), il peut être perturbé par des sources de chaleur soudaines
+                (radiateurs, rayons de soleil directs). Aussi, si quelqu'un bouge trop lentement, le capteur peut voir
+                cela comme une variation naturelle de la température ambiante. À l'inverse, un passage très rapide peut
+                ne pas laisser assez de temps au circuit pour analyser le signal avant que la personne ne soit déjà
+                sortie du champ.</p>
+        </section>
+
+        <section id="maintenabilite">
+            <h2>Maintenabilité</h2>
+            <p>Avec son design sans pièces mobiles ni firmware à mettre à jour, c'est parti pour des années sans
+                intervention dans un simple boîtier contre la pluie et la neige. Pas de surchauffe (grâce à sa faible
+                consommation) et une robustesse aux vibrations modérées qui évite les pannes mécaniques. Par contre, sa
+                sensibilité aux fausses alertes (insectes, vibrations fortes ou changements brusques de température en
+                extérieur non abrité) peut nécessiter une intégration avec d'autre matériel technologique, augmentant
+                légèrement le temps initial d'installation. Malgré ça, son rapport fiabilité/prix reste imbattable pour
+                du long terme.</p>
+        </section>
+
+        <section id="avantages">
+            <h2>Avantages et inconvénients de la techno (partie importante)</h2>
+            <p>Le capteur PIR HC-SR501 est un simple objet technologique peu couteux et facile à trouver. Pour des petit
+                projet et expérience débutante, c'est l'idéal. On y retrouve un câblage extrêmement simple : trois
+                broches seulement. Ce qui offre un montage plutôt simple. Cet outil propose aussi un ajustement au
+                niveau de la sensibilité et du temps de retard, permettant une personnalisation unique. En ce qui
+                concerne sa faible consommation d'énergie, une batterie te suffit pour alimenter ce capteur pour
+                plusieurs jours.</p>
+            <p>Toutefois, tout objet à leurs limites. En effet, le HC-SR501 ne peut pas détecter les personnes ou les
+                objets qui ne bougent pas. Même s'il peut atteindre des températures extrêmes (voir plus haut), une
+                mauvaise protection, surtout dans des milieux extérieurs, peut provoquer des déclenchements
+                intempestifs. Finalement, malgré ses avantages, il ne peut malheureusement pas détecter les mouvements à
+                travers le verre, les objets solides et les murs.</p>
+        </section>
+
+        <section id="comparaison">
+            <h2>Comparaison aux autres solutions</h2>
+            <p>On pourrait envisager d'utiliser plutôt un autre capteur de mouvement comme le AM312. Par contre, on
+                réaliserait qu'il est un peu moins avantageux que le capteur HC-SR501 : portée fixe et plus courte (2 à
+                3 mètres), angle de détection plus petit, plage de tension beaucoup plus étroite (3V à 5V). Par contre,
+                il est plus petit de taille et à une consommation d'énergie vraiment plus faible, ce qui lui permettrait
+                d'avoir une autonomie sur batterie nettement supérieure.</p>
+            <p>On pourrait aussi envisager d'utiliser plutôt un module comme le HC-SR505. Cependant, on s'apercevrait
+                qu'il est légèrement moins performant que le HC-SR501 : portée fixe et plus courte (~3 m), angle de
+                vision un peu plus étroit (&lt;100° fixe), et aucun réglage possible (sensibilité ou délai). En
+                contrepartie, sa taille ultra-compacte (~10 mm lentille) et sa consommation très basse (&lt;60 µA) lui
+                offrent une autonomie sur batterie nettement supérieure.</p>
+            <p>Si l'on regarde plus loin, on aurait aussi un module mmWave radar comme le SeeedStudio 24GHz Human Static
+                Presence, qui est nettement meilleur du HC-SR501 pour des usages avancés : détection de présences
+                statiques (respiration, immobilité), passe à travers les non-métaux et reste insensible aux insectes ou
+                aux variations thermiques. Sa portée s'étend jusqu'à 12 m avec une précision de 95 % grâce à ses
+                algorithmes intégrés. En contrepartie, ce capteur à ses défauts : prix élevé (28$ comparativement à
+                2-3$) et une consommation d'énergie plus intense (20-50mA vs 60µA), le rendent moins accessible pour des
+                projets simples.</p>
+
+            <div class="sources">
+                <span class="sources-label">Sources</span>
+                <a href="https://hobbycomponents.com/sensors/1065-am312-low-power-ultra-miniature-pir-sensor"
+                    target="_blank">hobbycomponents.com — AM312 PIR Sensor</a>
+                <a href="https://qqtrading.com.my/001-0035" target="_blank">qqtrading.com.my — HC-SR505</a>
+                <a href="https://components101.com/sensors/hc-sr505-pir-sensor-pinout-datasheet"
+                    target="_blank">components101.com — HC-SR505 PIR Sensor Datasheet</a>
+                <a href="https://ca.robotshop.com/products/seeedstudio-24ghz-mmwave-radar-sensor-human-static-presence-module"
+                    target="_blank">robotshop.com — SeeedStudio 24GHz mmWave Radar</a>
+            </div>
+        </section>
+
+        <section id="conclusion">
+            <h2>Conclusion</h2>
+            <p>Selon mes expériences avec le capteur HC-SR501, je trouve qu'il à été totalement à la hauteur de mes
+                attentes. C'est un petit module hyper efficace qui prouve qu'on n'a pas besoin de trucs ultra complexes
+                pour obtenir des résultats solides.</p>
+            <p>Mes recherches m'ont confirmé que ce petit objet apporte une vraie liberté dans les projets faciles et
+                innovants. C'est un matériel léger, pas cher et parfait pour des usages simples où on veut une détection
+                fiable sans se prendre la tête avec des systèmes hors de prix.</p>
+            <div class="callout">Même s'il a ses petites faiblesses face au soleil ou aux animaux, il reste une base
+                incontournable. En le couplant avec un peu d'IA ou d'autres capteurs, il peut créer des systèmes
+                intelligents et économes en énergie.</div>
+        </section>
+
+    </main>
+
+    <footer>
+        Fin du document · Rapport HC-SR501 PIR
+    </footer>
+</body>
+
+</html>
